@@ -7,3 +7,4 @@ pub mod population_loader;
 pub mod transmission_manager;
 pub mod death_manager;
 pub mod death_report;
+pub mod config;

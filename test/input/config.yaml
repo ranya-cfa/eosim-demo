@@ -4,3 +4,13 @@ infectious_period: 4.0
 initial_infections: 100
 random_seed: 8675309
 death_rate: 0.02
+infection_probabilities:
+  child_to_child: 0.5
+  child_to_adult: 0.3
+  adult_to_child: 0.7
+  adult_to_adult: 0.4
+  adult_to_elderly: 0.6
+  elderly_to_adult: 0.8
+  child_to_elderly: 0.2
+  elderly_to_child: 0.9
+  elderly_to_elderly: 0.5

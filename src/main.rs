@@ -15,7 +15,8 @@ use eosim_demo::sir::{
     population_loader::PopulationLoader,
     transmission_manager::TransmissionManager,
     death_manager::DeathManager,
-    death_report::DeathReport
+    death_report::DeathReport,
+    config::{InfectionProbabilities, Parameters, Config, Scenario},
 };
 use serde_derive::{Deserialize, Serialize};
 use threadpool::ThreadPool;
@@ -31,36 +32,6 @@ struct SirArgs {
     /// Number of threads
     #[arg(short, long, default_value_t = 1)]
     threads: u8,
-}
-
-struct InfectionProbabilities {
-    child_to_child: f64,
-    child_to_adult: f64,
-    adult_to_child: f64,
-    adult_to_adult: f64,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
-struct Parameters {
-    population: usize,
-    r0: f64,
-    infectious_period: f64,
-    initial_infections: usize,
-    random_seed: u64,
-    death_rate: f64,
-    infection_probabilities: InfectionProbabilities,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
-struct Scenario {
-    scenario: usize,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(untagged)]
-enum Config {
-    Single(Parameters),
-    Multiple(Vec<Parameters>),
 }
 
 fn setup_context(context: &mut Context, parameters: &Parameters) {

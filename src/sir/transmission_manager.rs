@@ -10,9 +10,11 @@ use eosim::{
 use rand::Rng;
 use rand_distr::{Distribution, Exp};
 
+use crate::sir::person_properties::{DiseaseStatus, AgeGroup};
+use crate::sir::config::InfectionProbabilities;
+
 use super::{
     global_properties::{InfectiousPeriod, Population, R0},
-    person_properties::DiseaseStatus, Age Group,
 };
 
 pub struct TransmissionManager {}
@@ -86,6 +88,11 @@ fn attempt_infection(context: &mut Context, source_person_id: PersonId) {
                 (AgeGroup::Child, AgeGroup::Adult) => infection_probabilities.child_to_adult,
                 (AgeGroup::Adult, AgeGroup::Child) => infection_probabilities.adult_to_child,
                 (AgeGroup::Adult, AgeGroup::Adult) => infection_probabilities.adult_to_adult,
+                (AgeGroup::Adult, AgeGroup::Elderly) => infection_probabilities.adult_to_elderly,
+                (AgeGroup::Elderly, AgeGroup::Adult) => infection_probabilities.elderly_to_adult,
+                (AgeGroup::Child, AgeGroup::Elderly) => infection_probabilities.child_to_elderly,
+                (AgeGroup::Elderly, AgeGroup::Child) => infection_probabilities.elderly_to_child,
+                (AgeGroup::Elderly, AgeGroup::Elderly) => infection_probabilities.elderly_to_elderly,
             };
             if rng.gen::<f64>() < infection_probability {
             context.set_person_property_value::<DiseaseStatus>(contact_id, DiseaseStatus::I)
