@@ -7,7 +7,7 @@ use eosim::{
 };
 use rand_distr::{Distribution, Exp};
 
-use super::{global_properties::InfectiousPeriod, person_properties::DiseaseStatus};
+use super::{global_properties::InfectiousPeriod, person_properties::{DiseaseStatus, AgeGroup}};
 
 pub struct InfectionManager {}
 

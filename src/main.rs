@@ -33,6 +33,13 @@ struct SirArgs {
     threads: u8,
 }
 
+struct InfectionProbabilities {
+    child_to_child: f64,
+    child_to_adult: f64,
+    adult_to_child: f64,
+    adult_to_adult: f64,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 struct Parameters {
     population: usize,
@@ -41,6 +48,7 @@ struct Parameters {
     initial_infections: usize,
     random_seed: u64,
     death_rate: f64,
+    infection_probabilities: InfectionProbabilities,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
@@ -63,6 +71,8 @@ fn setup_context(context: &mut Context, parameters: &Parameters) {
     context.set_global_property_value::<InitialInfections>(parameters.initial_infections);
     context.set_global_property_value::<DeathRate>(parameters.death_rate);
 
+    context.set_global_property_value::<InfectionProbabilities>(parameters.infection_probabilities);
+    
     // Set up RNG
     context.set_base_random_seed(parameters.random_seed);
 

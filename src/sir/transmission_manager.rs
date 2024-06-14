@@ -12,7 +12,7 @@ use rand_distr::{Distribution, Exp};
 
 use super::{
     global_properties::{InfectiousPeriod, Population, R0},
-    person_properties::DiseaseStatus,
+    person_properties::DiseaseStatus, Age Group,
 };
 
 pub struct TransmissionManager {}
@@ -77,8 +77,19 @@ fn attempt_infection(context: &mut Context, source_person_id: PersonId) {
         }
         drop(rng);
         let contact_disease_status = context.get_person_property_value::<DiseaseStatus>(contact_id);
+        let source_age_group = context.get_person_property_value::<AgeGroup>(source_person_id);
+        let contact_age_group = context.get_person_property_value::<AgeGroup>(contact_id);
         if matches!(contact_disease_status, DiseaseStatus::S) {
+            let infection_probabilities = context.get_global_property_value::<InfectionProbabilities>().expect("Infection probabilities not specified");
+            let infection_probability = match (source_age_group, contact_age_group) {
+                (AgeGroup::Child, AgeGroup::Child) => infection_probabilities.child_to_child,
+                (AgeGroup::Child, AgeGroup::Adult) => infection_probabilities.child_to_adult,
+                (AgeGroup::Adult, AgeGroup::Child) => infection_probabilities.adult_to_child,
+                (AgeGroup::Adult, AgeGroup::Adult) => infection_probabilities.adult_to_adult,
+            };
+            if rng.gen::<f64>() < infection_probability {
             context.set_person_property_value::<DiseaseStatus>(contact_id, DiseaseStatus::I)
+            }
         }
         schedule_next_infectious_contact(context, source_person_id)
     }
